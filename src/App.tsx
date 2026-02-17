@@ -14,7 +14,7 @@ function App() {
   return (
     <DealsProvider>
       <UserProvider>
-        <Router>
+        <Router basename="/groupbuy">
           <Layout>
             <Routes>
               <Route path="/" element={<Home />} />
