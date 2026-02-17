@@ -3,10 +3,14 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import DealCard from '../components/DealCard';
-import { mockDeals } from '../data/mockDeals';
+import { useDeals } from '../context/DealsContext';
+import { useUser } from '../context/UserContext';
 
 export default function Home() {
-
+    const { deals } = useDeals();
+    const { setRole } = useUser();
+    // Slice to show only first 6 deals on home
+    const displayDeals = deals.slice(0, 6);
 
     const scrollToDeals = () => {
         const dealsSection = document.getElementById('featured-deals');
@@ -47,7 +51,11 @@ export default function Home() {
                                 Explore Deals
                                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                             </button>
-                            <Link to="/dashboard" className="bg-white/5 hover:bg-white/10 text-white border border-white/10 px-8 py-4 rounded-xl text-lg font-medium transition-colors inline-block">
+                            <Link
+                                to="/dashboard"
+                                onClick={() => setRole('supplier')}
+                                className="bg-white/5 hover:bg-white/10 text-white border border-white/10 px-8 py-4 rounded-xl text-lg font-medium transition-colors inline-block"
+                            >
                                 Become a Supplier
                             </Link>
                         </div>
@@ -68,7 +76,7 @@ export default function Home() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {mockDeals.map((deal) => (
+                    {displayDeals.map((deal) => (
                         <DealCard key={deal.id} deal={deal} />
                     ))}
                 </div>

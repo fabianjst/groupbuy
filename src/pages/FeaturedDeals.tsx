@@ -4,14 +4,15 @@ import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import DealCard from '../components/DealCard';
-import { mockDeals } from '../data/mockDeals';
+import { useDeals } from '../context/DealsContext';
 
 export default function FeaturedDeals() {
     const [category, setCategory] = useState('All');
     const [sortBy, setSortBy] = useState('newest');
+    const { deals } = useDeals();
 
     const filteredDeals = useMemo(() => {
-        let result = [...mockDeals];
+        let result = [...deals];
 
         // Filter
         if (category !== 'All') {
@@ -22,6 +23,7 @@ export default function FeaturedDeals() {
         result.sort((a, b) => {
             if (sortBy === 'price-asc') return a.price - b.price;
             if (sortBy === 'price-desc') return b.price - a.price;
+            if (sortBy === 'expiring-soon') return new Date(a.expiresAt).getTime() - new Date(b.expiresAt).getTime();
             return 0; // Default to existing order (mock data is roughly 'newest')
         });
 
@@ -60,6 +62,7 @@ export default function FeaturedDeals() {
                         <option value="newest">Featured</option>
                         <option value="price-asc">Price: Low to High</option>
                         <option value="price-desc">Price: High to Low</option>
+                        <option value="expiring-soon">Expiring Soon</option>
                     </select>
                 </div>
             </div>

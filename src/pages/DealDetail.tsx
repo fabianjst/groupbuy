@@ -1,14 +1,19 @@
-
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Clock, Package, Tag, ArrowLeft, CheckCircle, ShieldCheck } from 'lucide-react';
-import { mockDeals } from '../data/mockDeals';
+import { useDeals } from '../context/DealsContext';
+import { useUser } from '../context/UserContext';
+import NumberStepper from '../components/NumberStepper';
 import { useState } from 'react';
 
 export default function DealDetail() {
     const { id } = useParams();
-    const deal = mockDeals.find(d => d.id === id);
+    const { deals, updateDeal } = useDeals();
+    const { addOrder } = useUser();
+    const deal = deals.find(d => d.id === id);
     const [hasJoined, setHasJoined] = useState(false);
+    // Initialize quantity
+    const [quantity, setQuantity] = useState(deal ? deal.minQuantity : 1);
 
     if (!deal) {
         return (
@@ -31,6 +36,23 @@ export default function DealDetail() {
         : 100;
 
     const timeLeft = new Date(deal.expiresAt).toLocaleDateString();
+
+    const handlePlaceOrder = () => {
+        if (!deal) return;
+
+        addOrder({
+            dealId: deal.id,
+            quantity: quantity,
+            totalPrice: deal.price * (1 - currentDiscount / 100) * quantity,
+            date: new Date().toISOString()
+        });
+
+        updateDeal(deal.id, {
+            currentQuantity: deal.currentQuantity + quantity
+        });
+
+        setHasJoined(true);
+    };
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -134,8 +156,8 @@ export default function DealDetail() {
                                     <div
                                         key={tier.threshold}
                                         className={`text-center p-2 rounded-lg border ${deal.currentQuantity >= tier.threshold
-                                                ? 'bg-primary/20 border-primary/50 text-white'
-                                                : 'bg-white/5 border-white/10 text-muted'
+                                            ? 'bg-primary/20 border-primary/50 text-white'
+                                            : 'bg-white/5 border-white/10 text-muted'
                                             }`}
                                     >
                                         <div className="font-bold">{tier.discountPercentage}% OFF</div>
@@ -145,24 +167,55 @@ export default function DealDetail() {
                             </div>
                         </div>
 
-                        <button
-                            onClick={() => setHasJoined(!hasJoined)}
-                            className={`w-full py-4 rounded-xl text-lg font-bold transition-all transform hover:scale-[1.02] active:scale-[0.98] ${hasJoined
-                                    ? 'bg-green-500 hover:bg-green-600 text-white'
-                                    : 'bg-primary hover:bg-indigo-600 text-white'
-                                }`}
-                        >
-                            {hasJoined ? (
-                                <span className="flex items-center justify-center gap-2">
-                                    <CheckCircle className="w-5 h-5" /> Order Placed!
-                                </span>
-                            ) : (
-                                `Place Order`
-                            )}
-                        </button>
-                        <p className="text-center text-muted text-sm">
-                            Your card will only be charged when the group buy ends.
-                        </p>
+                        {deal.supplier.id === 's1' ? (
+                            <div className="bg-white/5 border border-white/10 rounded-xl p-6 text-center">
+                                <h4 className="text-white font-bold mb-2">This is your deal</h4>
+                                <p className="text-muted text-sm mb-4">
+                                    You can't buy your own deal, but you can track its performance.
+                                </p>
+                                <div className="flex gap-4 justify-center">
+                                    <Link
+                                        to="/analytics"
+                                        className="bg-primary/10 text-primary hover:bg-primary/20 px-4 py-2 rounded-lg font-medium transition-colors"
+                                    >
+                                        View Analytics
+                                    </Link>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-muted mb-2">Quantity</label>
+                                    <NumberStepper
+                                        value={quantity}
+                                        onChange={setQuantity}
+                                        min={deal.minQuantity}
+                                        step={10}
+                                    />
+                                    <p className="text-xs text-muted mt-1">Minimum order: {deal.minQuantity} {deal.unit}</p>
+                                </div>
+
+                                <button
+                                    onClick={handlePlaceOrder}
+                                    disabled={hasJoined}
+                                    className={`w-full py-4 rounded-xl text-lg font-bold transition-all transform hover:scale-[1.02] active:scale-[0.98] ${hasJoined
+                                        ? 'bg-green-500 cursor-default'
+                                        : 'bg-primary hover:bg-indigo-600 text-white'
+                                        }`}
+                                >
+                                    {hasJoined ? (
+                                        <span className="flex items-center justify-center gap-2">
+                                            <CheckCircle className="w-5 h-5" /> Order Placed!
+                                        </span>
+                                    ) : (
+                                        `Place Order for $${(deal.price * (1 - currentDiscount / 100) * quantity).toFixed(2)}`
+                                    )}
+                                </button>
+                                <p className="text-center text-muted text-sm">
+                                    Your card will only be charged when the group buy ends.
+                                </p>
+                            </div>
+                        )}
                     </div>
 
                     <div>

@@ -5,20 +5,29 @@ import DealDetail from './pages/DealDetail';
 import SupplierDashboard from './pages/SupplierDashboard';
 import FeaturedDeals from './pages/FeaturedDeals';
 import SupplierAnalytics from './pages/SupplierAnalytics';
+import { DealsProvider } from './context/DealsContext';
+
+import BuyerDashboard from './pages/BuyerDashboard';
+import { UserProvider } from './context/UserContext';
 
 function App() {
   return (
-    <Router>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/deal/:id" element={<DealDetail />} />
-          <Route path="/dashboard" element={<SupplierDashboard />} />
-          <Route path="/features" element={<FeaturedDeals />} />
-          <Route path="/analytics" element={<SupplierAnalytics />} />
-        </Routes>
-      </Layout>
-    </Router>
+    <DealsProvider>
+      <UserProvider>
+        <Router>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/deal/:id" element={<DealDetail />} />
+              <Route path="/dashboard" element={<SupplierDashboard />} />
+              <Route path="/buyer-dashboard" element={<BuyerDashboard />} />
+              <Route path="/features" element={<FeaturedDeals />} />
+              <Route path="/analytics" element={<SupplierAnalytics />} />
+            </Routes>
+          </Layout>
+        </Router>
+      </UserProvider>
+    </DealsProvider>
   );
 }
 

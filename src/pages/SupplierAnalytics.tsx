@@ -95,7 +95,7 @@ export default function SupplierAnalytics() {
                                         </div>
                                     </motion.div>
                                 </div>
-                                <span className="text-xs text-muted">{['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'][index]}</span>
+                                <span className="text-xs text-muted">{['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][index]}</span>
                             </div>
                         ))}
                     </div>

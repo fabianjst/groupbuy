@@ -18,7 +18,39 @@ export default function DealCard({ deal }: DealCardProps) {
         ? (deal.currentQuantity / nextTier.threshold) * 100
         : 100;
 
-    const timeLeft = new Date(deal.expiresAt).toLocaleDateString();
+    const calculateTimeLeft = () => {
+        const expiryDate = new Date(deal.expiresAt);
+        const now = new Date();
+        const diffTime = expiryDate.getTime() - now.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        let text = expiryDate.toLocaleDateString();
+        let color = "text-white";
+        // Default icon color remains primary unless critical
+        let iconColor = "text-primary";
+
+        if (diffDays <= 7 && diffDays > 0) {
+            text = `${diffDays} day${diffDays !== 1 ? 's' : ''} left`;
+        }
+
+        if (diffDays <= 1) {
+            color = "text-red-400"; // Red for critical
+            iconColor = "text-red-400";
+        } else if (diffDays <= 3) {
+            color = "text-orange-400"; // Orange for warning
+            iconColor = "text-orange-400";
+        }
+
+        if (diffDays <= 0) {
+            text = "Expired";
+            color = "text-muted";
+            iconColor = "text-muted";
+        }
+
+        return { text, color, iconColor };
+    };
+
+    const { text: timeText, color: timeColor, iconColor } = calculateTimeLeft();
 
     return (
         <Link to={`/deal/${deal.id}`} className="block h-full">
@@ -32,9 +64,9 @@ export default function DealCard({ deal }: DealCardProps) {
                         alt={deal.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
-                    <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-md text-sm font-medium text-white flex items-center gap-1">
-                        <Clock className="w-4 h-4 text-primary" />
-                        <span>{timeLeft}</span>
+                    <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-md text-sm font-medium flex items-center gap-1">
+                        <Clock className={`w-4 h-4 ${iconColor}`} />
+                        <span className={timeColor}>{timeText}</span>
                     </div>
                 </div>
 
