@@ -13,8 +13,8 @@ export default function Navbar() {
                 <div className="flex justify-between h-16 items-center">
                     <div className="flex items-center">
                         <Link to="/" className="flex items-center gap-2">
-                            <img src="/img/pb_logo.svg" alt="PB Logo" className="h-9 w-auto img-smooth" />
-                            <img src="/img/groupbuy_font_nohalo.svg" alt="Groupbuy" className="h-8 w-auto mt-1" />
+                            <img src={`${import.meta.env.BASE_URL}img/pb_logo.svg`} alt="PB Logo" className="h-9 w-auto img-smooth" />
+                            <img src={`${import.meta.env.BASE_URL}img/groupbuy_font_nohalo.svg`} alt="Groupbuy" className="h-8 w-auto mt-1" />
                         </Link>
                     </div>
 
