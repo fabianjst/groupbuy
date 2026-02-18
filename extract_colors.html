@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Extractor</title>
+</head>
+
+<body>
+    <h1>Extracted Colors</h1>
+    <div id="results">Running...</div>
+    <img id="logo" src="/groupbuy/img/groupbuy_logo.png" style="display:none;" />
+    <!-- Added /groupbuy/ base path just in case, but usually public serves at root in dev. 
+         Wait, vite config base was likely set to /groupbuy/ for github pages deploy?
+         I saw "vite.config.ts" earlier. If base is set, I might need to respect it.
+         But for local dev servers, usually the 'public' folder is served at root.
+         However, the user mentioned deploying to GitHub Pages.
+         Let's try root path first, as `npm run dev` serves `public` at root usually unless configured otherwise.
+         Actually, let's try reading `vite.config.ts` quickly to be sure about the base URL or I will just handle both possibilities in the script.
+    -->
+    <script>
+        window.onload = function () {
+            const img = new Image();
+            img.crossOrigin = "Anonymous";
+            // Check if we are on a path that needs the base
+            const path = window.location.pathname.includes('/groupbuy/') ? '/groupbuy/img/groupbuy_logo.png' : '/img/groupbuy_logo.png';
+            img.src = path;
+
+            img.onload = function () {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+                const colorCounts = {};
+
+                for (let i = 0; i < imageData.length; i += 4) {
+                    const r = imageData[i];
+                    const g = imageData[i + 1];
+                    const b = imageData[i + 2];
+                    const a = imageData[i + 3];
+
+                    if (a < 128) continue; // Skip transparent pixels
+
+                    // Simple binning to group similar colors (reduce noise)
+                    const binSize = 10;
+                    const rBin = Math.round(r / binSize) * binSize;
+                    const gBin = Math.round(g / binSize) * binSize;
+                    const bBin = Math.round(b / binSize) * binSize;
+
+                    const key = `${rBin},${gBin},${bBin}`;
+                    colorCounts[key] = (colorCounts[key] || 0) + 1;
+                }
+
+                const sortedColors = Object.entries(colorCounts)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 10) // Top 10 colors
+                    .map(([key, count]) => {
+                        const [r, g, b] = key.split(',').map(Number);
+                        return `rgb(${r}, ${g}, ${b}) - #${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
+                    });
+
+                document.getElementById('results').innerText = sortedColors.join('\n');
+            };
+
+            img.onerror = function () {
+                // Try fallback path
+                if (!img.src.includes('/groupbuy/')) {
+                    img.src = '/groupbuy/img/groupbuy_logo.png';
+                } else {
+                    document.getElementById('results').innerText = "Error loading image: " + img.src;
+                }
+            };
+        };
+    </script>
+</body>
+
+</html>
