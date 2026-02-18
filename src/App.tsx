@@ -14,7 +14,7 @@ function App() {
   return (
     <DealsProvider>
       <UserProvider>
-        <Router basename="/groupbuy">
+        <Router basename={import.meta.env.DEV ? '/' : '/groupbuy'}>
           <Layout>
             <Routes>
               <Route path="/" element={<Home />} />

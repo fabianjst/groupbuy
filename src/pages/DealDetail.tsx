@@ -114,11 +114,11 @@ export default function DealDetail() {
                                 <p className="text-muted text-sm uppercase tracking-wider mb-1">Current Price / Unit</p>
                                 <div className="flex items-baseline gap-3">
                                     <span className="text-4xl font-bold text-white">
-                                        ${(deal.price * (1 - currentDiscount / 100)).toFixed(2)}
+                                        €{(deal.price * (1 - currentDiscount / 100)).toFixed(2)}
                                     </span>
                                     {currentDiscount > 0 && (
                                         <span className="text-xl text-muted line-through">
-                                            ${deal.price.toFixed(2)}
+                                            €{deal.price.toFixed(2)}
                                         </span>
                                     )}
                                 </div>
@@ -208,7 +208,7 @@ export default function DealDetail() {
                                             <CheckCircle className="w-5 h-5" /> Order Placed!
                                         </span>
                                     ) : (
-                                        `Place Order for $${(deal.price * (1 - currentDiscount / 100) * quantity).toFixed(2)}`
+                                        `Place Order for €${(deal.price * (1 - currentDiscount / 100) * quantity).toFixed(2)}`
                                     )}
                                 </button>
                                 <p className="text-center text-muted text-sm">

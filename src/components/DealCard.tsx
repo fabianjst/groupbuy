@@ -105,11 +105,11 @@ export default function DealCard({ deal }: DealCardProps) {
                             <p className="text-muted text-xs uppercase tracking-wider">Current Price / Unit</p>
                             <div className="flex items-baseline gap-2">
                                 <span className="text-2xl font-bold text-white">
-                                    ${(deal.price * (1 - currentDiscount / 100)).toFixed(2)}
+                                    €{(deal.price * (1 - currentDiscount / 100)).toFixed(2)}
                                 </span>
                                 {currentDiscount > 0 && (
                                     <span className="text-sm text-muted line-through">
-                                        ${deal.price.toFixed(2)}
+                                        €{deal.price.toFixed(2)}
                                     </span>
                                 )}
                             </div>

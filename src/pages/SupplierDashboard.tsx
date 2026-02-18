@@ -23,6 +23,7 @@ export default function SupplierDashboard() {
     const [description, setDescription] = useState('');
     const [standardPrice, setStandardPrice] = useState(0);
     const [minQuantity, setMinQuantity] = useState(10);
+    const [unit, setUnit] = useState('units');
     const [endDate, setEndDate] = useState('');
     const [imagePreview, setImagePreview] = useState<string | null>(null);
 
@@ -45,9 +46,10 @@ export default function SupplierDashboard() {
             originalPrice: standardPrice,
 
             discountTiers: tiers.map(t => ({ threshold: t.quantity, discountPercentage: t.discount })),
+
             currentQuantity: 0,
             minQuantity: minQuantity,
-            unit: 'units',
+            unit: unit || 'units',
             category: 'Food',
             expiresAt: endDate ? new Date(endDate).toISOString() : new Date(Date.now() + 86400000 * 7).toISOString(),
             supplier: {
@@ -146,7 +148,7 @@ export default function SupplierDashboard() {
                                     value={standardPrice}
                                     onChange={setStandardPrice}
                                     step={0.50}
-                                    prefix="$"
+                                    prefix="€"
                                 />
                             </div>
 
@@ -196,6 +198,20 @@ export default function SupplierDashboard() {
                                     ))}
                                 </div>
                                 <p className="text-xs text-muted mt-2">Adjust quantity thresholds and discount percentages.</p>
+                            </div>
+                        </div>
+
+
+                        <div className="grid grid-cols-2 gap-6">
+                            <div>
+                                <label className="block text-sm font-medium text-muted mb-2">Unit Type</label>
+                                <input
+                                    type="text"
+                                    value={unit}
+                                    onChange={(e) => setUnit(e.target.value)}
+                                    className="w-full bg-background border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary transition-colors"
+                                    placeholder="e.g. kg, box, pallet"
+                                />
                             </div>
                         </div>
 
@@ -289,7 +305,7 @@ export default function SupplierDashboard() {
 
                                             <div className="mt-auto flex justify-between items-center text-sm">
                                                 <span className="text-muted">{deal.currentQuantity} / {deal.minQuantity} units</span>
-                                                <span className="text-primary font-bold">${deal.price}</span>
+                                                <span className="text-primary font-bold">€{deal.price}</span>
                                             </div>
 
                                             <div className="mt-3 w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
@@ -319,7 +335,8 @@ export default function SupplierDashboard() {
                         </div>
                     )}
                 </>
-            )}
-        </div>
+            )
+            }
+        </div >
     );
 }

@@ -33,7 +33,7 @@ export default function SupplierAnalytics() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
                 <KpiCard
                     title="Total Revenue"
-                    value="$124,592"
+                    value="€124,592"
                     change="+12.5%"
                     isPositive={true}
                     icon={<DollarSign className="w-6 h-6 text-emerald-400" />}
@@ -54,7 +54,7 @@ export default function SupplierAnalytics() {
                 />
                 <KpiCard
                     title="Avg. Deal Size"
-                    value="$185"
+                    value="€185"
                     change="+8.4%"
                     isPositive={true}
                     icon={<TrendingUp className="w-6 h-6 text-pink-400" />}
@@ -91,7 +91,7 @@ export default function SupplierAnalytics() {
                                         className="w-full bg-emerald-500 rounded-t-sm relative group-hover:opacity-80 transition-opacity"
                                     >
                                         <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-surface border border-white/10 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
-                                            ${value}k
+                                            €{value}k
                                         </div>
                                     </motion.div>
                                 </div>
@@ -153,7 +153,7 @@ export default function SupplierAnalytics() {
                                 <div className="flex justify-between text-sm">
                                     <span className="text-white">{category.name}</span>
                                     <div className="flex gap-4">
-                                        <span className="text-white font-medium">${category.value.toLocaleString()}</span>
+                                        <span className="text-white font-medium">€{category.value.toLocaleString()}</span>
                                         <span className="text-muted w-8 text-right">{category.percent}</span>
                                     </div>
                                 </div>

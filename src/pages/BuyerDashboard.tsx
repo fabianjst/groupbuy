@@ -63,7 +63,7 @@ export default function BuyerDashboard() {
                                         </div>
                                         <div className="flex items-center gap-2 text-white">
                                             <span className="text-primary font-bold">Total:</span>
-                                            <span className="font-bold">${item.totalPrice.toFixed(2)}</span>
+                                            <span className="font-bold">€{item.totalPrice.toFixed(2)}</span>
                                         </div>
                                     </div>
                                 </div>
